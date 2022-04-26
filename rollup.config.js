@@ -10,7 +10,7 @@ const extensions = ['.js', '.ts'];
 
 function generateConfig(configType, format) {
   const browser = configType === 'browser';
-  const bundle = format === 'iife';
+  const bundle = format === 'iife' || format === "deno";
 
   const config = {
     input: 'src/index.ts',
@@ -90,6 +90,20 @@ function generateConfig(configType, format) {
 
           break;
         }
+        case "deno": {
+          config.external = ['http', 'https', 'buffer'];
+          config.output = [
+            {
+              file: "web3.deno.js",
+              format: "es",
+              sourcemap: true,
+              paths: {
+                "buffer": "https://deno.land/std@0.136.0/node/buffer.ts",
+              }
+            }
+          ]
+          break;
+        }
         default: {
           config.output = [
             {
@@ -154,7 +168,8 @@ function generateConfig(configType, format) {
 }
 
 export default [
-  generateConfig('node'),
-  generateConfig('browser'),
-  generateConfig('browser', 'iife'),
+  // generateConfig('node'),
+  // generateConfig('browser'),
+  // generateConfig('browser', 'iife'),
+  generateConfig('browser', 'deno'),
 ];
